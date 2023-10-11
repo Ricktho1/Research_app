@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
@@ -14,7 +15,7 @@ class ResultScreen extends StatefulWidget {
 class ResultScreenState extends State<ResultScreen> {
   File? _videoFile;
   List<Map<String, dynamic>>? _results;
-
+  Dio dio = Dio();
   Future<void> _processVideo() async {
     if (_videoFile == null) {
       return;
@@ -24,7 +25,6 @@ class ResultScreenState extends State<ResultScreen> {
         'POST', Uri.parse('http://localhost:5000/process_video'));
     request.files
         .add(await http.MultipartFile.fromPath('video', _videoFile!.path));
-
     var response = await request.send();
 
     if (response.statusCode == 200) {

@@ -22,12 +22,11 @@ def process_video():
     if not allowed_file(video_file.filename, allowed_extensions):
         return jsonify({"error": "Invalid file format"}), 400
 
-    # Read the video file from the binary data
-    video_data = video_file.read()
-    video_bytes = io.BytesIO(video_data)
+    video_file_path = video_file.filename
+    cap = cv2.VideoCapture(video_file_path)
 
-    # Process the video directly from the binary data
-    cap = cv2.VideoCapture(video_bytes)
+    if not cap.isOpened():
+        raise Exception("Could not open video file: {}".format(video_file))
     number_of_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     start_time = time.time()
     timer = 0
@@ -153,4 +152,4 @@ def allowed_file(filename, allowed_extensions):
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
